@@ -91,7 +91,7 @@ export default function LoginPage() {
 
         {/* Form Footer */}
         <div className="text-center mt-6 text-sm text-gray-500 font-medium">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-primary-500 hover:text-primary-600 font-bold inline-flex items-center gap-1">
             Sign Up
             <ArrowRight size={14} />

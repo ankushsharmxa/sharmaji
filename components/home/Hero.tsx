@@ -1,64 +1,64 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 import Container from "@/components/layout/Container";
-import { ArrowRight, Sparkles, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="relative w-full overflow-hidden py-12 md:py-16 bg-gray-50/50" aria-label="Welcome Promotion Banner">
+    <section className="relative w-full overflow-hidden py-10 md:py-14 bg-white" aria-label="Electronics Promotion Banner">
       <Container>
-        <div className="relative w-full rounded-3xl overflow-hidden bg-gradient-to-br from-primary-600 to-primary-900 text-white shadow-premium min-h-[380px] md:min-h-[460px] flex items-center">
+        <div className="relative w-full rounded-2xl overflow-hidden bg-slate-950 text-white shadow-xl min-h-[380px] md:min-h-[460px] flex items-center">
           
-          {/* Decorative background vectors */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl pointer-events-none translate-x-1/4 -translate-y-1/4" />
-          <div className="absolute bottom-0 left-1/3 w-[300px] h-[300px] bg-accent-500/10 rounded-full blur-2xl pointer-events-none" />
+          {/* Subtle Ambient Light Glows */}
+          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary-600/10 rounded-full blur-3xl pointer-events-none translate-x-1/4 -translate-y-1/4" />
+          <div className="absolute bottom-0 left-1/3 w-[250px] h-[250px] bg-blue-500/5 rounded-full blur-2xl pointer-events-none" />
 
-          {/* Banner content grid */}
+          {/* Core Layout Grid */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 w-full p-8 sm:p-12 lg:p-16 relative z-10 items-center">
             
             {/* Left Column: Promotion Info */}
-            <div className="md:col-span-7 flex flex-col items-start gap-4 sm:gap-6">
-              <span className="inline-flex items-center gap-1 bg-white/10 backdrop-blur-md text-[10px] font-black tracking-widest px-3 py-1 rounded-full uppercase">
-                <Zap size={12} className="text-accent-300" />
-                Next-Day Delivery
+            <div className="md:col-span-7 flex flex-col items-start gap-4 md:gap-6">
+              <span className="inline-flex items-center gap-1.5 bg-white/10 border border-white/10 text-slate-300 text-[10px] font-black tracking-widest px-3.5 py-1 rounded-full uppercase">
+                Featured Audio Deal
               </span>
               
-              <h2 className="text-xs sm:text-sm font-bold text-accent-300 uppercase tracking-widest leading-none">
-                PREMIUM DEALS LIVE
-              </h2>
-              
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                Upgrade Your Smart Living
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
+                Sony WH-1000XM4 <br />
+                <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-white bg-clip-text text-transparent">
+                  Silence Redefined.
+                </span>
               </h1>
               
-              <p className="text-sm sm:text-base text-white/80 leading-relaxed font-medium max-w-lg">
-                Enjoy flat discount offers up to 45% off on our handpicked wireless earbuds, smartwatches, office essentials, and organic groceries.
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-medium max-w-md">
+                Industry-leading active noise cancellation, smart adaptive listening algorithms, and up to 30 hours of rich high-fidelity audio.
               </p>
               
               <div className="flex flex-wrap items-center gap-4 mt-2">
-                <Link href="/shop">
-                  <Button variant="orange" size="lg" className="flex items-center gap-2 font-bold group min-h-[44px] shadow-soft">
+                <Link href="/product/sony-wh-1000xm4">
+                  <Button variant="primary" className="bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl px-7 min-h-[44px] shadow-lg shadow-primary-500/10 flex items-center gap-2">
                     Shop Now
-                    <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                    <ArrowRight size={14} />
                   </Button>
                 </Link>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-white/60">
-                  <ShieldCheck size={16} className="text-accent-300" />
-                  <span>100% Genuine Brands</span>
+                <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400">
+                  <ShieldCheck size={14} className="text-primary-400" />
+                  <span>1 Year Sony Warranty</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Promotional Item Hero Visual */}
-            <div className="md:col-span-5 hidden md:flex justify-center items-center">
-              <div className="relative w-full max-w-[280px] aspect-square transform hover:scale-105 transition-transform duration-500">
+            {/* Right Column: Premium Clean Product Visual */}
+            <div className="md:col-span-5 hidden md:flex justify-center items-center relative">
+              <div className="relative w-full max-w-[280px] aspect-square transition-transform duration-500 hover:scale-[1.02] z-10">
                 <Image
-                  src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80"
-                  alt="AeroSound Max Headphones Promo Image"
+                  src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80"
+                  alt="Sony WH-1000XM4 Wireless Headphones"
                   fill
-                  className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+                  className="object-contain drop-shadow-[0_20px_50px_rgba(59,130,246,0.15)]"
                   priority
                 />
               </div>

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import Container from "./Container";
 import Button from "@/components/ui/Button";
 import { 
@@ -11,177 +12,259 @@ import {
   Menu, 
   X, 
   User, 
-  LayoutDashboard,
-  XCircle
+  Heart,
+  XCircle,
+  ArrowRight,
+  TrendingUp
 } from "lucide-react";
+import { PRODUCTS } from "@/data/products";
+import { Product } from "@/types";
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
 
-  const navLinks = [
+  const publicNavLinks = [
     { label: "Home", href: "/" },
-    { label: "Shop All", href: "/shop" },
-    { label: "My Orders", href: "/orders" },
+    { label: "Categories", href: "/#categories" },
+    { label: "Featured Deals", href: "/#deals" },
+    { label: "Fresh Arrivals", href: "/#new-arrivals" }
   ];
+
+  // Derive suggestions directly during render
+  const suggestions = searchQuery.trim()
+    ? PRODUCTS.filter((p) =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.category.toLowerCase().includes(searchQuery.toLowerCase())
+      ).slice(0, 5)
+    : [];
+
+  // Handle outside clicks to close search suggestions
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleClearSearch = () => {
     setSearchQuery("");
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-soft transition-all duration-300">
-      <Container className="h-16 md:h-20 flex items-center justify-between gap-4">
+    <header className="sticky top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100/80 shadow-sm transition-all duration-200">
+      <Container className="h-16 md:h-20 flex items-center justify-between gap-6">
         
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center flex-shrink-0 touch-target" aria-label="SharmaJi Store Home">
-          <Image 
-            src="/logo.svg" 
-            alt="SharmaJi Store Logo" 
-            width={180} 
-            height={36} 
-            className="h-9 md:h-10 w-auto"
-            priority
-          />
+        <Link href="/" className="flex items-center flex-shrink-0 focus-visible:ring-2 focus-visible:ring-primary-500 rounded-xl" aria-label="SharmaJi Store Home">
+          <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-1.5">
+            <span className="bg-primary-600 text-white px-2 py-0.5 rounded-lg text-lg font-black shadow-md shadow-primary-500/20">SJ</span>
+            <span>SHARMAJI</span>
+            <span className="text-primary-600 font-extrabold">.</span>
+          </span>
         </Link>
 
-        {/* Desktop Search Bar */}
-        <div className="hidden md:flex flex-grow max-w-xl relative">
-          <input
-            type="text"
-            placeholder="Search for premium products, brands and more..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg pl-10 pr-10 py-3 focus:outline-none focus:border-primary-500 focus:bg-white transition-colors min-h-[44px]"
-            aria-label="Search products"
-          />
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-          {searchQuery && (
-            <button 
-              onClick={handleClearSearch}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1"
-              aria-label="Clear search"
-            >
-              <XCircle size={16} />
-            </button>
+        {/* Center Navigation Links - Desktop Only */}
+        <nav className="hidden lg:flex items-center gap-7" aria-label="Main Navigation">
+          {publicNavLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link 
+                key={link.label} 
+                href={link.href}
+                className={`text-[13px] font-bold transition-all relative py-1.5 uppercase tracking-wider focus-visible:ring-2 focus-visible:ring-primary-500 rounded-md ${
+                  isActive 
+                    ? "text-primary-600 font-black" 
+                    : "text-slate-500 hover:text-slate-900"
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full" />
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Autocomplete Search Bar - Desktop Only */}
+        <div ref={searchRef} className="hidden md:flex flex-grow max-w-sm relative">
+          <div className="w-full relative">
+            <input
+              type="text"
+              placeholder="Search chargers, earbuds, Sony..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setShowSuggestions(true);
+              }}
+              onFocus={() => setShowSuggestions(true)}
+              className="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl pl-9 pr-9 py-2.5 focus:outline-none focus:border-primary-500 focus:bg-white focus:ring-4 focus:ring-primary-500/5 transition-all min-h-[40px] font-medium text-slate-800"
+              aria-label="Search catalog"
+            />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+            {searchQuery && (
+              <button 
+                onClick={handleClearSearch}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1"
+                aria-label="Clear search"
+              >
+                <XCircle size={14} />
+              </button>
+            )}
+          </div>
+
+          {/* Autocomplete Dropdown */}
+          {showSuggestions && (searchQuery.trim() !== "" || suggestions.length > 0) && (
+            <div className="absolute top-[46px] left-0 right-0 bg-white border border-slate-100 shadow-premium rounded-2xl p-2.5 z-50 flex flex-col gap-2 overflow-hidden animate-fade-in">
+              {suggestions.length > 0 ? (
+                <>
+                  <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider px-2 py-1 flex items-center gap-1">
+                    <TrendingUp size={10} /> Suggestions
+                  </div>
+                  {suggestions.map((product) => (
+                    <Link
+                      key={product.id}
+                      href={`/product/${product.slug}`}
+                      onClick={() => setShowSuggestions(false)}
+                      className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-xl transition-colors group"
+                    >
+                      <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-slate-50 border border-slate-100 flex-shrink-0 flex items-center justify-center p-1">
+                        <Image src={product.images[0]} alt={product.name} fill className="object-contain p-0.5" />
+                      </div>
+                      <div className="flex-grow min-w-0">
+                        <h4 className="text-xs font-bold text-slate-800 truncate group-hover:text-primary-600 transition-colors">{product.name}</h4>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">{product.brand}</p>
+                      </div>
+                      <ArrowRight size={12} className="text-slate-300 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                    </Link>
+                  ))}
+                </>
+              ) : (
+                <div className="text-center py-6 text-xs text-slate-400 font-medium">
+                  No matching electronic products found
+                </div>
+              )}
+            </div>
           )}
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-6" aria-label="Main Navigation">
-          {navLinks.map((link) => (
-            <Link 
-              key={link.href} 
-              href={link.href}
-              className="text-sm font-bold text-gray-600 hover:text-primary-500 transition-colors py-2 focus-visible:ring-2 focus-visible:ring-primary-500 rounded"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* User Actions & Utility Buttons */}
+        {/* User Utilities */}
         <div className="flex items-center gap-1 sm:gap-2">
-          
-          {/* Dashboard Quick Access */}
-          <Link href="/admin" className="hidden sm:inline-flex" aria-label="Admin Dashboard">
-            <Button variant="ghost" size="sm" className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-primary-500 touch-target">
-              <LayoutDashboard size={14} />
-              Admin
-            </Button>
+          {/* Wishlist Icon */}
+          <Link 
+            href="#" 
+            className="p-2.5 text-slate-700 hover:text-primary-500 transition-colors rounded-full hover:bg-slate-50 touch-target"
+            aria-label="Wishlist items"
+          >
+            <Heart size={18} className="stroke-[1.8]" />
           </Link>
 
-          {/* Cart Icon Button with Badge */}
+          {/* Cart Icon */}
           <Link 
             href="/cart" 
-            className="relative p-2.5 text-gray-700 hover:text-primary-500 transition-colors rounded-full hover:bg-gray-50 touch-target"
-            aria-label="Shopping Cart with 3 items"
+            className="relative p-2.5 text-slate-700 hover:text-primary-500 transition-colors rounded-full hover:bg-slate-50 touch-target group"
+            aria-label="Shopping Cart"
           >
-            <ShoppingBag size={20} className="stroke-[1.8]" />
-            <span className="absolute top-1 right-1 w-5 h-5 bg-orange-500 text-white rounded-full flex items-center justify-center text-[10px] font-bold shadow-soft">
+            <ShoppingBag size={18} className="stroke-[1.8] group-hover:scale-105 transition-transform" />
+            <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 bg-primary-600 text-white rounded-full flex items-center justify-center text-[9px] font-black shadow-md shadow-primary-500/10 border border-white">
               3
             </span>
           </Link>
 
-          {/* Auth Button */}
-          <Link href="/login" className="hidden md:block" aria-label="Login page">
-            <Button variant="outline" size="sm" className="flex items-center gap-2 font-bold touch-target">
-              <User size={14} />
-              Login
-            </Button>
+          {/* Login/Profile Profile Icon */}
+          <Link href="/login" className="p-2.5 text-slate-700 hover:text-primary-500 transition-colors rounded-full hover:bg-slate-50 touch-target" aria-label="Login">
+            <User size={18} className="stroke-[1.8]" />
           </Link>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Menu Drawer Toggle */}
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2.5 lg:hidden text-gray-700 hover:bg-gray-50 rounded-full touch-target"
+            className="p-2.5 lg:hidden text-slate-700 hover:bg-slate-50 rounded-full touch-target transition-colors"
             aria-expanded={isMobileMenuOpen}
             aria-label="Toggle navigation menu"
           >
-            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </Container>
 
-      {/* Sticky Mobile Search Bar */}
-      <div className="md:hidden border-t border-gray-100 bg-white px-4 py-2 flex items-center gap-2 sticky bottom-0 w-full z-40">
+      {/* Sticky Mobile Search Input */}
+      <div className="md:hidden border-t border-slate-100 bg-white px-4 py-2 flex items-center gap-2 sticky bottom-0 w-full z-40">
         <div className="relative flex-grow">
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search audio, chargers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-gray-50 border border-gray-200 text-xs rounded-lg pl-9 pr-8 py-2.5 focus:outline-none focus:border-primary-500 min-h-[44px]"
-            aria-label="Search products"
+            className="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl pl-9 pr-8 py-2.5 focus:outline-none focus:border-primary-500 min-h-[40px] font-medium"
+            aria-label="Search"
           />
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={13} />
           {searchQuery && (
             <button 
               onClick={handleClearSearch}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-0.5"
               aria-label="Clear search"
             >
-              <XCircle size={14} />
+              <XCircle size={13} />
             </button>
           )}
         </div>
       </div>
 
-      {/* Mobile Drawer Overlay with Smooth Animation */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 top-16 z-40 bg-white border-t border-gray-100 flex flex-col justify-between p-6 animate-slide-right lg:hidden">
-          <div className="flex flex-col gap-6">
-            {/* Menu Links */}
-            <nav className="flex flex-col gap-2" aria-label="Mobile Navigation">
-              {navLinks.map((link) => (
+      {/* Mobile Drawer (Slide Out Menu) */}
+      <div 
+        className={`fixed inset-y-0 right-0 z-50 w-full sm:w-[320px] bg-white shadow-2xl border-l border-slate-100 flex flex-col justify-between p-6 transition-transform duration-300 ease-in-out lg:hidden ${
+          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+        style={{ top: "64px" }}
+      >
+        <div className="flex flex-col gap-6">
+          <nav className="flex flex-col gap-1" aria-label="Mobile Navigation">
+            {publicNavLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
                 <Link 
-                  key={link.href} 
+                  key={link.label} 
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-base font-bold text-gray-800 hover:text-primary-500 py-3 border-b border-gray-50 block touch-target"
+                  className={`text-sm font-bold py-3.5 border-b border-slate-50 block transition-colors ${
+                    isActive ? "text-primary-600 font-black" : "text-slate-800 hover:text-primary-500"
+                  }`}
                 >
                   {link.label}
                 </Link>
-              ))}
-              <Link 
-                href="/admin" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-base font-bold text-gray-800 hover:text-primary-500 py-3 border-b border-gray-50 flex items-center gap-2 touch-target"
-              >
-                <LayoutDashboard size={18} />
-                Admin Dashboard
-              </Link>
-            </nav>
-          </div>
-
-          {/* Bottom actions */}
-          <div className="flex flex-col gap-3">
-            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button className="w-full font-bold min-h-[44px]" variant="primary">Login / Sign Up</Button>
-            </Link>
-            <p className="text-center text-xs text-gray-400">© 2026 SharmaJi Store. Built with Next.js 15.</p>
-          </div>
+              );
+            })}
+          </nav>
         </div>
+
+        <div className="flex flex-col gap-3">
+          <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+            <Button className="w-full font-bold min-h-[44px] rounded-xl shadow-soft" variant="primary">Log In / Register</Button>
+          </Link>
+          <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-2">
+            © 2026 SHARMAJI store. All Rights Reserved.
+          </p>
+        </div>
+      </div>
+
+      {/* Mobile Drawer Overlay Background */}
+      {isMobileMenuOpen && (
+        <div 
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="fixed inset-0 top-[64px] bg-slate-900/20 backdrop-blur-[2px] z-40 lg:hidden"
+        />
       )}
     </header>
   );

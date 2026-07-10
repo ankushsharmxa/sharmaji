@@ -44,7 +44,7 @@ export default function CartPage() {
         </div>
         <h2 className="text-xl font-bold text-gray-800">Your Shopping Cart is Empty</h2>
         <p className="text-xs sm:text-sm text-gray-500 mt-2 mb-6 max-w-sm font-medium">
-          Explore today's exclusive discounts and grab high-quality groceries, gadgets or wearables.
+          Explore today&apos;s exclusive discounts and grab high-quality groceries, gadgets or wearables.
         </p>
         <div className="flex gap-3">
           <Link href="/shop">

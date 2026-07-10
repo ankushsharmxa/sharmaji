@@ -1,8 +1,10 @@
 export const CATEGORIES = [
-  { id: "c1", name: "Electronics", slug: "electronics", icon: "Laptop" },
-  { id: "c2", name: "Groceries", slug: "groceries", icon: "Apple" },
-  { id: "c3", name: "Fashion", slug: "fashion", icon: "Shirt" },
-  { id: "c4", name: "Home Essentials", slug: "home-kitchen", icon: "Home" },
-  { id: "c5", name: "Beauty & Care", slug: "beauty", icon: "Sparkles" },
-  { id: "c6", name: "Wellness", slug: "wellness", icon: "Heart" },
+  { id: "cat-1", name: "Chargers & Adapters", slug: "chargers", icon: "Zap" },
+  { id: "cat-2", name: "Power Banks", slug: "power-banks", icon: "BatteryCharging" },
+  { id: "cat-3", name: "Bluetooth Speakers", slug: "speakers", icon: "Volume2" },
+  { id: "cat-4", name: "Wireless Earbuds", slug: "earbuds", icon: "Earphones" },
+  { id: "cat-5", name: "Headphones", slug: "headphones", icon: "Headphones" },
+  { id: "cat-6", name: "USB Cables", slug: "cables", icon: "Cable" },
+  { id: "cat-7", name: "Laptop Accessories", slug: "laptop-accessories", icon: "Laptop" },
+  { id: "cat-8", name: "Phone Accessories", slug: "phone-accessories", icon: "Smartphone" }
 ];

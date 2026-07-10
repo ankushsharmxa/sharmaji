@@ -1,6 +1,10 @@
+"use client";
+
 import React from "react";
 import Container from "@/components/layout/Container";
 import ProductGrid from "@/components/products/ProductGrid";
+import Section from "@/components/ui/Section";
+import Heading from "@/components/ui/Heading";
 import { PRODUCTS } from "@/data/products";
 
 export default function LatestProducts() {
@@ -10,20 +14,20 @@ export default function LatestProducts() {
   ).slice(0, 4);
 
   return (
-    <section className="py-12 bg-white">
+    <Section background="white" spacing="md" id="new-arrivals">
       <Container>
-        <div className="flex flex-col sm:flex-row items-baseline justify-between mb-8">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-baseline justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+            <Heading level={2} className="font-extrabold text-slate-900">
               Fresh Arrivals
-            </h2>
-            <p className="mt-1 text-sm text-gray-500">
+            </Heading>
+            <p className="mt-1.5 text-xs sm:text-sm text-slate-400 font-medium">
               The newest additions to our catalog. Grab them before stock runs out.
             </p>
           </div>
         </div>
         <ProductGrid products={sorted} />
       </Container>
-    </section>
+    </Section>
   );
 }

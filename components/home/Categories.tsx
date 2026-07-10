@@ -1,52 +1,72 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Container from "@/components/layout/Container";
-import { Laptop, Apple, Shirt, Home, Sparkles, Heart } from "lucide-react";
+import Section from "@/components/ui/Section";
+import Heading from "@/components/ui/Heading";
 
 export default function Categories() {
   const categoriesList = [
-    { name: "Electronics", slug: "electronics", icon: Laptop, color: "bg-blue-50 text-blue-600 hover:bg-blue-100" },
-    { name: "Groceries", slug: "groceries", icon: Apple, color: "bg-green-50 text-green-600 hover:bg-green-100" },
-    { name: "Fashion", slug: "fashion", icon: Shirt, color: "bg-purple-50 text-purple-600 hover:bg-purple-100" },
-    { name: "Home Essentials", slug: "home-kitchen", icon: Home, color: "bg-amber-50 text-amber-600 hover:bg-amber-100" },
-    { name: "Beauty & Care", slug: "beauty", icon: Sparkles, color: "bg-pink-50 text-pink-600 hover:bg-pink-100" },
-    { name: "Wellness", slug: "wellness", icon: Heart, color: "bg-rose-50 text-rose-600 hover:bg-rose-100" },
+    { name: "Headphones", slug: "headphones", count: 14, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=300&q=80" },
+    { name: "Fast Chargers", slug: "chargers", count: 25, image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=300&q=80" },
+    { name: "Speakers", slug: "speakers", count: 19, image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=300&q=80" },
+    { name: "Power Banks", slug: "power-banks", count: 30, image: "https://images.unsplash.com/photo-1609592424089-9a76d8b6fd70?auto=format&fit=crop&w=300&q=80" },
+    { name: "Wireless Earbuds", slug: "earbuds", count: 22, image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=300&q=80" },
+    { name: "Charging Cables", slug: "cables", count: 120, image: "https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=300&q=80" },
+    { name: "Laptop Stands", slug: "laptop-accessories", count: 40, image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=300&q=80" },
+    { name: "Power Strips", slug: "phone-accessories", count: 55, image: "https://images.unsplash.com/photo-1586105251261-72a756497a11?auto=format&fit=crop&w=300&q=80" }
   ];
 
   return (
-    <section className="py-12 bg-white" aria-label="Shop Categories">
+    <Section background="white" spacing="md" id="categories">
       <Container>
         <div className="flex flex-col items-center text-center mb-8">
-          <h2 className="text-xl md:text-2xl font-extrabold text-gray-900 tracking-tight">
+          <Heading level={2} align="center" className="font-extrabold text-slate-900">
             Shop by Category
-          </h2>
-          <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
-            Explore our curated items catalog, from fresh food to state-of-the-art tech.
+          </Heading>
+          <p className="mt-2 text-xs sm:text-sm text-slate-400 max-w-md font-medium">
+            Explore certified, high-performance tech accessories and premium audio gear.
           </p>
         </div>
 
-        {/* Swipeable horizontal scrolling on mobile, grid on desktop */}
-        <div className="flex gap-4 overflow-x-auto pb-4 md:pb-0 md:grid md:grid-cols-6 md:gap-6 hide-scrollbar scroll-smooth snap-x touch-pan-x">
+        {/* Categories Row */}
+        <div className="flex gap-6 sm:gap-8 overflow-x-auto pb-4 justify-start md:justify-center items-center hide-scrollbar snap-x touch-pan-x">
           {categoriesList.map((category) => {
-            const Icon = category.icon;
             return (
               <Link 
                 key={category.slug} 
                 href={`/category/${category.slug}`}
-                className="flex flex-col items-center group snap-start flex-shrink-0 w-24 md:w-auto"
-                aria-label={`Shop ${category.name}`}
+                className="group flex flex-col items-center gap-3 flex-shrink-0 w-[96px] sm:w-[110px] snap-start text-center focus:outline-none"
+                aria-label={`View ${category.name} category`}
               >
-                <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center transition-all duration-300 shadow-soft group-hover:scale-105 group-hover:shadow-hover touch-target ${category.color}`}>
-                  <Icon size={28} className="stroke-[1.5]" />
+                {/* Perfectly Cohesive Circle Image */}
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-slate-100/80 group-hover:border-primary-500 group-focus:border-primary-500 transition-all duration-300 bg-slate-50 shadow-soft">
+                  <Image 
+                    src={category.image} 
+                    alt={category.name} 
+                    fill 
+                    sizes="(max-width: 640px) 80px, 120px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-350"
+                    loading="lazy"
+                  />
                 </div>
-                <span className="mt-3 text-xs md:text-sm font-bold text-gray-700 group-hover:text-primary-500 transition-colors text-center truncate w-full">
-                  {category.name}
-                </span>
+
+                {/* Info Text */}
+                <div className="flex flex-col items-center gap-0.5">
+                  <h3 className="font-bold text-slate-800 text-xs sm:text-[13px] tracking-tight group-hover:text-primary-600 transition-colors line-clamp-2 leading-tight">
+                    {category.name}
+                  </h3>
+                  <span className="text-[10px] text-slate-400 font-bold">
+                    {category.count} items
+                  </span>
+                </div>
               </Link>
             );
           })}
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }

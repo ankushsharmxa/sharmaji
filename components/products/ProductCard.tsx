@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Card from "@/components/ui/Card";
-import Badge from "@/components/ui/Badge";
-import Button from "@/components/ui/Button";
-import { Star, Heart, Eye } from "lucide-react";
+import Price from "@/components/ui/Price";
+import Rating from "@/components/ui/Rating";
+import { Heart } from "lucide-react";
 import { Product } from "@/types";
 
 interface ProductCardProps {
@@ -21,116 +21,81 @@ export default function ProductCard({ product }: ProductCardProps) {
     originalPrice,
     discountPercentage,
     images,
-    category,
+    brand,
     rating,
     reviewsCount,
-    specs
+    stock
   } = product;
 
   const [isWishlisted, setIsWishlisted] = useState(false);
   const imageUrl = images?.[0] || "/placeholder-product.webp";
-  const brandName = specs?.Brand || "SharmaJi Premium";
 
   return (
-    <Card hoverable={true} className="flex flex-col h-full bg-white relative group min-h-[380px]">
-      
-      {/* Wishlist Icon Button (UI Only) */}
+    <Card 
+      hoverable={true} 
+      className="flex flex-col h-full bg-white relative group rounded-2xl border border-slate-100/65 overflow-hidden transition-all duration-300 hover:shadow-soft-xl hover:-translate-y-1"
+    >
+      {/* Absolute click overlay spanning the entire card except the wishlist icon */}
+      <Link href={`/product/${slug}`} className="absolute inset-0 z-10" aria-label={`View details of ${name}`} />
+
+      {/* Wishlist Button */}
       <button
         onClick={(e) => {
           e.preventDefault();
+          e.stopPropagation();
           setIsWishlisted(!isWishlisted);
         }}
-        className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm border border-gray-100 flex items-center justify-center text-gray-400 hover:text-red-500 hover:scale-105 active:scale-95 transition-all shadow-soft touch-target"
+        className="absolute top-3 right-3 z-20 w-8.5 h-8.5 rounded-full bg-white/80 backdrop-blur-sm border border-slate-100 flex items-center justify-center text-slate-400 hover:text-red-500 hover:scale-105 active:scale-95 transition-all shadow-sm touch-target"
         aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
       >
-        <Heart size={16} className={isWishlisted ? "fill-red-500 text-red-500" : "fill-none"} />
+        <Heart size={14} className={isWishlisted ? "fill-red-500 text-red-500" : "fill-none"} />
       </button>
 
-      {/* Discount Badge */}
-      {discountPercentage && discountPercentage > 0 ? (
-        <Badge 
-          variant="orange" 
-          size="sm" 
-          className="absolute top-3 left-3 z-10 font-bold"
-        >
-          {discountPercentage}% OFF
-        </Badge>
-      ) : null}
-
-      {/* Product Image Link */}
-      <Link href={`/product/${slug}`} className="block relative aspect-square overflow-hidden bg-gray-50/50">
+      {/* Image Container with consistent sizing and ratio */}
+      <div className="relative aspect-square w-full overflow-hidden bg-slate-50/40 border-b border-slate-50 flex items-center justify-center">
         <Image
           src={imageUrl}
           alt={`Product photo of ${name}`}
           fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+          className="object-contain p-6 transition-transform duration-500 group-hover:scale-103"
           loading="lazy"
         />
-        
-        {/* Quick View Button Hover Overlay (UI only) */}
-        <div className="absolute inset-0 bg-gray-900/5 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex items-center gap-1.5 bg-white/95 text-gray-800 border-none font-bold py-2 shadow-soft"
-            tabIndex={-1}
-          >
-            <Eye size={14} />
-            Quick View
-          </Button>
-        </div>
-      </Link>
+      </div>
 
-      {/* Product Info */}
-      <div className="flex flex-col flex-1 p-4">
-        {/* Brand & Category Label */}
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
-            {category}
-          </span>
-          <span className="text-[10px] font-extrabold text-primary-500 tracking-wide uppercase">
-            {brandName}
-          </span>
-        </div>
+      {/* Info details */}
+      <div className="flex flex-col flex-grow p-4.5 items-center text-center">
         
+        {/* Brand Name & Stock Indicator */}
+        <div className="flex items-center justify-center gap-2 mb-1.5 w-full">
+          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+            {brand}
+          </span>
+          {stock < 15 ? (
+            <span className="text-[9px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">
+              Low Stock
+            </span>
+          ) : null}
+        </div>
+
         {/* Title */}
-        <Link href={`/product/${slug}`} className="hover:text-primary-500 transition-colors">
-          <h3 className="font-semibold text-gray-800 text-xs sm:text-sm md:text-base line-clamp-2 leading-tight min-h-[2.5rem] tracking-tight">
+        <div className="group-hover:text-primary-600 transition-colors w-full mb-2">
+          <h3 className="font-extrabold text-slate-800 text-[13px] sm:text-sm line-clamp-2 leading-snug min-h-[2.5rem] tracking-tight">
             {name}
           </h3>
-        </Link>
+        </div>
 
-        {/* Rating and Reviews count */}
-        <div className="flex items-center gap-1.5 mt-2 mb-3">
-          <div className="flex items-center gap-0.5 bg-green-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm">
-            <span>{rating.toFixed(1)}</span>
-            <Star size={10} className="fill-current" />
-          </div>
-          <span className="text-[10px] font-bold text-gray-400">
-            ({reviewsCount} Reviews)
+        {/* Ratings block */}
+        <Rating rating={rating} reviewsCount={reviewsCount} size="sm" className="mb-3" />
+
+        {/* Pricing details */}
+        <div className="mt-auto pt-2 border-t border-slate-50/80 w-full flex flex-col items-center gap-0.5">
+          <Price price={price} originalPrice={originalPrice} discountPercentage={discountPercentage} size="sm" />
+          <span className="text-[9px] font-bold text-green-600 tracking-wider uppercase mt-1">
+            Free Delivery
           </span>
         </div>
 
-        {/* Prices & Action Button at the bottom */}
-        <div className="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between gap-2">
-          <div className="flex flex-col">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-sm sm:text-base md:text-lg font-extrabold text-gray-900">
-                ₹{price.toLocaleString("en-IN")}
-              </span>
-              {originalPrice && originalPrice > price && (
-                <span className="text-[10px] sm:text-xs text-gray-400 line-through">
-                  ₹{originalPrice.toLocaleString("en-IN")}
-                </span>
-              )}
-            </div>
-            {/* Delivery badge */}
-            <span className="text-[9px] font-extrabold text-green-600 tracking-wide mt-1 uppercase">
-              Free Delivery
-            </span>
-          </div>
-        </div>
       </div>
     </Card>
   );

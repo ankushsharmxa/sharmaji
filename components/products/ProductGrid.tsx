@@ -1,5 +1,5 @@
 import React from "react";
-import ProductCard from "./ProductCard";
+import ProductCard from "@/components/products/ProductCard";
 import { Product } from "@/types";
 
 interface ProductGridProps {
@@ -15,8 +15,17 @@ export default function ProductGrid({ products }: ProductGridProps) {
     );
   }
 
+  // Dynamically set grid column classes to center products when count is less than 5
+  const count = products.length;
+  const gridColsClass = 
+    count === 1 ? "grid-cols-1 max-w-xs mx-auto" :
+    count === 2 ? "grid-cols-2 max-w-xl mx-auto" :
+    count === 3 ? "grid-cols-2 sm:grid-cols-3 max-w-3xl mx-auto" :
+    count === 4 ? "grid-cols-2 sm:grid-cols-4 max-w-5xl mx-auto" :
+    "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
+
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6">
+    <div className={`grid ${gridColsClass} gap-3 sm:gap-6 justify-center`}>
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

@@ -8,8 +8,10 @@ import Container from "@/components/layout/Container";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import { PRODUCTS } from "@/data/products";
-import { Star, ShieldCheck, Truck, RotateCcw, Award, ShoppingCart, CreditCard } from "lucide-react";
+import { ShieldCheck, Truck, RotateCcw, Award, ShoppingCart, CreditCard } from "lucide-react";
 import ProductCard from "@/components/products/ProductCard";
+import Price from "@/components/ui/Price";
+import Rating from "@/components/ui/Rating";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -25,12 +27,10 @@ export default function ProductDetailPage({ params }: Props) {
     notFound();
   }
 
-  // Gallery images list (using Unsplash placeholders for gallery demonstration)
-  const galleryImages = [
-    product.images[0],
-    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80",
-    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80",
-  ];
+  // Gallery images list (using the product's actual multiple images)
+  const galleryImages = product.images && product.images.length > 0 
+    ? product.images 
+    : ["/placeholder-product.webp"];
 
   const [activeImage, setActiveImage] = useState(galleryImages[0]);
 
@@ -115,15 +115,7 @@ export default function ProductDetailPage({ params }: Props) {
               </h1>
 
               {/* Ratings */}
-              <div className="flex items-center gap-2.5">
-                <div className="flex items-center gap-0.5 bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded">
-                  <span>{product.rating.toFixed(1)}</span>
-                  <Star size={12} className="fill-current" />
-                </div>
-                <span className="text-sm font-semibold text-gray-400">
-                  {product.reviewsCount} verified reviews & ratings
-                </span>
-              </div>
+              <Rating rating={product.rating} reviewsCount={product.reviewsCount} size="md" />
 
               {/* Color Selector (Disabled UI Only) */}
               <div className="mt-4">
@@ -172,21 +164,7 @@ export default function ProductDetailPage({ params }: Props) {
               <div className="py-4 border-y border-gray-100 my-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex flex-col">
                   <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Special Price</span>
-                  <div className="flex items-baseline gap-2.5 mt-0.5">
-                    <span className="text-2xl sm:text-3xl font-black text-gray-900">
-                      ₹{product.price.toLocaleString("en-IN")}
-                    </span>
-                    {product.originalPrice && (
-                      <>
-                        <span className="text-sm text-gray-400 line-through">
-                          ₹{product.originalPrice.toLocaleString("en-IN")}
-                        </span>
-                        <span className="text-sm font-bold text-orange-500">
-                          {product.discountPercentage}% OFF
-                        </span>
-                      </>
-                    )}
-                  </div>
+                  <Price price={product.price} originalPrice={product.originalPrice} discountPercentage={product.discountPercentage} size="lg" className="mt-1" />
                 </div>
 
                 {/* Add/Buy Buttons (Disabled UI Only) */}

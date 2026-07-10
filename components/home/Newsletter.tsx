@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod"; // Wait, in Next 15 without zodResolver installed yet, let's write standard react-hook-form or simple validation, to prevent compiler/runtime imports issues if package is not fully resolved. Let's use simple JS checks in handleSubmit or basic react-hook-form since they compile reliably.
 import Container from "@/components/layout/Container";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";

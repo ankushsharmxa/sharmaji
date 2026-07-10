@@ -1,20 +1,20 @@
 export const THEME = {
   colors: {
-    primary: "#0f52f8",
-    accent: "#f59e0b",
-    orange: "#ff6f00",
-    background: "#f8f9fa",
+    primary: "#2563EB",
+    accent: "#F97316",
+    success: "#16A34A",
+    background: "#F8FAFC",
   },
   radius: {
-    sm: "0.375rem",
-    md: "0.5rem",
-    lg: "0.75rem",
-    xl: "1rem",
-    "2xl": "1.5rem",
+    sm: "8px",
+    md: "10px",
+    lg: "12px",
+    xl: "12px",
+    "2xl": "12px",
   },
   shadows: {
-    soft: "0 2px 8px rgba(0, 0, 0, 0.05)",
-    premium: "0 10px 30px -10px rgba(15, 82, 248, 0.15)",
-    hover: "0 12px 24px rgba(0, 0, 0, 0.08)",
+    soft: "0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)",
+    premium: "0 4px 6px -1px rgba(15, 23, 42, 0.03), 0 2px 4px -2px rgba(15, 23, 42, 0.03)",
+    hover: "0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.08)",
   }
 };
