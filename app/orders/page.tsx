@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -6,6 +8,7 @@ import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import { Package, ChevronRight, Eye } from "lucide-react";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 export default function OrdersPage() {
   const mockOrders = [
@@ -32,7 +35,8 @@ export default function OrdersPage() {
   ];
 
   return (
-    <div className="py-10 bg-gray-50/50 min-h-screen">
+    <RequireAuth>
+      <div className="py-10 bg-gray-50/50 min-h-screen">
       <Container className="max-w-4xl">
         <h1 className="text-2xl font-extrabold text-gray-900 mb-8 flex items-center gap-2">
           <Package size={24} className="text-primary-500" />
@@ -104,5 +108,6 @@ export default function OrdersPage() {
         </div>
       </Container>
     </div>
+    </RequireAuth>
   );
 }

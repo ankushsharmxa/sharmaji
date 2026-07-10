@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import { CreditCard, ShoppingBag, ShieldCheck, Truck, CheckCircle2, Ticket, MapPin } from "lucide-react";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 export default function CheckoutPage() {
   const [useSameAsBilling, setUseSameAsBilling] = useState(true);
@@ -14,7 +15,8 @@ export default function CheckoutPage() {
   const [paymentMode, setPaymentMode] = useState("cod");
 
   return (
-    <div className="py-10 bg-gray-50/50 min-h-screen">
+    <RequireAuth>
+      <div className="py-10 bg-gray-50/50 min-h-screen">
       <Container>
         <h1 className="text-2xl font-extrabold text-gray-900 mb-8">Checkout</h1>
 
@@ -221,5 +223,6 @@ export default function CheckoutPage() {
         </div>
       </Container>
     </div>
+    </RequireAuth>
   );
 }

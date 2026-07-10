@@ -17,6 +17,7 @@ import {
   ChevronRight, 
   Layers 
 } from "lucide-react";
+import RequireAdmin from "@/components/auth/RequireAdmin";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -32,8 +33,9 @@ export default function AdminPage() {
   ];
 
   return (
-    <div className="py-10 bg-gray-50/50 min-h-screen">
-      <Container>
+    <RequireAdmin>
+      <div className="py-10 bg-gray-50/50 min-h-screen">
+        <Container>
         
         {/* Breadcrumbs */}
         <div className="flex items-center gap-2 text-xs text-gray-400 font-bold mb-6">
@@ -137,5 +139,6 @@ export default function AdminPage() {
         </div>
       </Container>
     </div>
+    </RequireAdmin>
   );
 }
